@@ -1,0 +1,33 @@
+{
+  "name": "time-series",
+  "version": "0.1.0",
+  "description": "scalable time series",
+  "module": "src/index.js",
+  "main": "timeSeries.js",
+  "scripts": {
+    "bundle": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samussiah/time-series.git"
+  },
+  "keywords": [
+    "scalable",
+    "time",
+    "series",
+    "d3"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samussiah/time-series/issues"
+  },
+  "homepage": "https://github.com/samussiah/time-series#readme",
+  "dependencies": {
+    "d3": "^4.13.0"
+  },
+  "devDependencies": {
+    "rollup": "^1.7.4"
+  }
+}
