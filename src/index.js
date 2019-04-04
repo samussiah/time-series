@@ -2,6 +2,7 @@ import layout from './layout';
 import addXAxis from './addXAxis';
 import addYAxis from './addYAxis';
 import drawLine from './drawLine';
+import addBrush from './addBrush';
 
 export default function timeSeries(data, settings = {}, element = 'body') {
     const ts = {
@@ -13,8 +14,7 @@ export default function timeSeries(data, settings = {}, element = 'body') {
     ts.x = addXAxis(ts);
     ts.y = addYAxis(ts);
     ts.line = drawLine(ts);
-    console.log(ts.x.domain);
-    console.log(ts.y.domain);
+    ts.brush = addBrush(ts);
 
     return ts;
 }

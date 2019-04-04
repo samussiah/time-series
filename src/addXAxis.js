@@ -1,44 +1,46 @@
-import getWidth from './getWidth';
-import getHeight from './getHeight';
-import getMargins from './getMargins';
+import getDimensions from './getDimensions';
 
 export default function addXAxis(ts) {
-    const width = getWidth(ts.containers.main);
-    const height = width/3;
-    const margins = getMargins();
+    const dimensions = getDimensions(ts.containers.main);
 
-    //scale
+    //domain
     const domain = d3.extent(
         ts.data,
         d => d3.timeParse(ts.settings.x.format)(d[ts.settings.x.field])
     );
-    const scale = d3.scaleTime()
-        .range([0, width - margins.left - margins.right])
-        .domain(domain)
-        //.nice();
 
-    //axis
-    const axis = d3.axisBottom()
+    //scale
+    const scale = d3.scaleTime()
+        .range([0, dimensions.width])
+        .domain(domain)
+
+    //generators
+    const generator = d3.axisBottom()
         .scale(scale);
+    const gridLinesGenerator = d3.axisBottom()
+        .scale(scale)
+        .tickSize(-dimensions.height)
+        .tickFormat('');
 
     //grid lines
-    const gridLines = ts.containers.g
+    const gridLines = ts.containers.chart
         .append('g')
-        .attr('transform', `translate(0,${height - margins.bottom})`)
-        .call(
-            d3.axisBottom().scale(scale).tickSize(-(height - margins.bottom)).tickFormat('')
-        );
+        .classed('grid-lines grid-lines--x', true)
+        .attr('transform', `translate(0,${dimensions.height})`)
+        .call(gridLinesGenerator);
 
-    //g
-    const g = ts.containers.g
+    //axis
+    const axis = ts.containers.chart
         .append('g')
-        .attr('transform', `translate(0,${height - margins.bottom})`)
-        .call(axis);
+        .classed('axis axis--x', true)
+        .attr('transform', `translate(0,${dimensions.height})`)
+        .call(generator);
 
     //label
-    const label = g.append('text')
-        .attr('x', (width - margins.left)/2)
-        .attr('y', margins.bottom - 15)
+    const label = axis.append('text')
+        .classed('label label--x', true)
+        .attr('x', dimensions.width/2)
+        .attr('y', dimensions.margins.bottom - 16)
         .style('text-anchor', 'middle')
         .style('fill', 'black')
         .text(ts.settings.x.label || 'Date');
@@ -46,9 +48,10 @@ export default function addXAxis(ts) {
     return {
         domain,
         scale,
-        axis,
+        generator,
+        gridLinesGenerator,
         gridLines,
-        g,
+        axis,
         label,
     };
 }

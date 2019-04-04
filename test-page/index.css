@@ -22,3 +22,9 @@
     width: 96%;
     margin: 12px 2%;
 }
+
+/* axes */
+.grid-lines {
+    stroke-width: .5px;
+    stroke-opacity: .25;
+}

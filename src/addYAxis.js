@@ -1,42 +1,41 @@
-import getWidth from './getWidth';
-import getHeight from './getHeight';
-import getMargins from './getMargins';
+import getDimensions from './getDimensions';
 
 export default function addYAxis(ts) {
-    const width = getWidth(ts.containers.main);
-    const height = width/3;
-    const margins = getMargins();
+    const dimensions = getDimensions(ts.containers.main);
 
     //scale
     const domain = d3.extent(ts.data, d => +d[ts.settings.y.field]);
     const scale = d3.scaleLinear()
-        .range([height - margins.top - margins.bottom, 0])
+        .range([dimensions.height, 0])
         .domain(domain)
-        //.nice();
+        .nice();
 
-    //axis
-    const axis = d3.axisLeft()
+    //generators
+    const generator = d3.axisLeft()
         .scale(scale);
+    const gridLinesGenerator = d3.axisLeft()
+        .scale(scale)
+        .tickSize(-dimensions.width)
+        .tickFormat('');
 
     //grid lines
-    const gridLines = ts.containers.g
+    const gridLines = ts.containers.chart
         .append('g')
-        .attr('transform', `translate(0,${margins.top})`)
-        .call(
-            d3.axisLeft().scale(scale).tickSize(-(width - margins.left)).tickFormat('')
-        );
+        .classed('grid-lines grid-lines--y', true)
+        .call(gridLinesGenerator);
 
-    //g
-    const g = ts.containers.g
+    //axis
+    const axis = ts.containers.chart
         .append('g')
-        .attr('transform', `translate(0,${margins.top})`)
-        .call(axis);
+        .classed('axis axis--y', true)
+        .call(generator);
 
     //label
-    const label = g.append('text')
+    const label = axis.append('text')
+        .classed('label label--x', true)
         .attr('transform', 'rotate(-90)')
-        .attr('x', -((height - margins.top) / 2))
-        .attr('y', -margins.left + 15)
+        .attr('x', -(dimensions.height / 2))
+        .attr('y', -dimensions.margins.left + 16)
         .style('text-anchor', 'middle')
         .style('fill', 'black')
         .text(ts.settings.y.label || 'Result');
@@ -44,9 +43,10 @@ export default function addYAxis(ts) {
     return {
         domain,
         scale,
-        axis,
+        generator,
+        gridLinesGenerator,
         gridLines,
-        g,
+        axis,
         label,
     };
 }
