@@ -8,16 +8,12 @@ export default function addBrush(ts) {
             end(ts);
         });
 
-    ts.containers.brush.call(generator);
+    ts.containers.chart.brush.call(generator);
 
     return {
         generator,
         idleTimeout: null,
         idleDelay: 350,
-        idled() {
-            console.log(this);
-            this.idleTimeout = null;
-        },
-        container: ts.containers.brush,
+        container: ts.containers.chart.brush,
     };
 }
