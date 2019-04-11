@@ -20,17 +20,17 @@ export default function drawer(dimensions, domain, canvas) {
         .call(gridLinesGenerator);
 
     //axis
-    const axis = canvas
-        .append('g')
-        .classed('axis axis--x', true)
-        .attr('transform', `translate(0,${dimensions.height/4})`)
-        .call(generator);
+    //const axis = canvas
+    //    .append('g')
+    //    .classed('axis axis--x', true)
+    //    .attr('transform', `translate(0,${dimensions.height/4})`)
+    //    .call(generator);
 
     return {
         scale,
         generator,
         gridLinesGenerator,
         gridLines,
-        axis,
+    //    axis,
     };
 }

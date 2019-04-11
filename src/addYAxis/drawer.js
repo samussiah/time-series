@@ -10,14 +10,14 @@ export default function chart(dimensions, domain, canvas) {
         .scale(scale);
 
     //axis
-    const axis = canvas
-        .append('g')
-        .classed('axis axis--y', true)
-        .call(generator);
+    //const axis = canvas
+    //    .append('g')
+    //    .classed('axis axis--y', true)
+    //    .call(generator);
 
     return {
         scale,
         generator,
-        axis,
+    //    axis,
     };
 }

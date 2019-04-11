@@ -30,10 +30,10 @@ export default function chart(dimensions, domain, canvas, labelText) {
     const label = axis.append('text')
         .classed('label label--x', true)
         .attr('x', dimensions.width/2)
-        .attr('y', dimensions.margins.bottom - 16)
+        .attr('y', dimensions.margins.bottom)
         .style('text-anchor', 'middle')
         .style('fill', 'black')
-        .text(labelText || 'Date');
+        //.text(labelText || 'Date');
 
     return {
         scale,

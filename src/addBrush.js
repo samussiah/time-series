@@ -1,19 +1,12 @@
-import end from './addBrush/end';
+import addBrushToChart from './addBrush/chart';
+import addBrushToDrawer from './addBrush/drawer';
 
 export default function addBrush(ts) {
-    const generator = d3.brush();
-
-    generator
-        .on('end', function() {
-            end(ts);
-        });
-
-    ts.containers.chart.brush.call(generator);
+    const chart = addBrushToChart(ts);
+    const drawer = addBrushToDrawer(ts);
 
     return {
-        generator,
-        idleTimeout: null,
-        idleDelay: 350,
-        container: ts.containers.chart.brush,
+        chart: addBrushToChart(ts),
+        drawer
     };
 }

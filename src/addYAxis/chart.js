@@ -33,7 +33,7 @@ export default function chart(dimensions, domain, canvas, labelText) {
         .attr('y', -dimensions.margins.left + 16)
         .style('text-anchor', 'middle')
         .style('fill', 'black')
-        .text(labelText || 'Result');
+        //.text(labelText || 'Result');
 
     return {
         scale,

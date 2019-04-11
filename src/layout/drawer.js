@@ -1,10 +1,11 @@
 export default function drawer(container, dimensions) {
+    dimensions.height = dimensions.height/4;
     //svg
     const svg = container
         .append('svg')
         .classed('ts-svg', true)
         .attr('width', dimensions.width + dimensions.margins.left + dimensions.margins.right)
-        .attr('height', dimensions.height/4 + dimensions.margins.top + dimensions.margins.bottom);
+        .attr('height', dimensions.height + dimensions.margins.top + dimensions.margins.bottom);
 
     //clipPath
     const clipPath = svg
@@ -13,7 +14,7 @@ export default function drawer(container, dimensions) {
     const clipPathRect = clipPath
         .append('rect')
         .attr('width', dimensions.width)
-        .attr('height', dimensions.height/4)
+        .attr('height', dimensions.height)
         //.attr('transform', `translate(${dimensions.margins.left},${dimensions.margins.top})`);
 
     //chart
@@ -33,6 +34,7 @@ export default function drawer(container, dimensions) {
         clipPath,
         clipPathRect,
         canvas,
-        brush
+        brush,
+        dimensions
     };
 }

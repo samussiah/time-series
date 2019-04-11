@@ -75,12 +75,13 @@
     }
 
     function drawer(container, dimensions) {
+        dimensions.height = dimensions.height/4;
         //svg
         const svg = container
             .append('svg')
             .classed('ts-svg', true)
             .attr('width', dimensions.width + dimensions.margins.left + dimensions.margins.right)
-            .attr('height', dimensions.height/4 + dimensions.margins.top + dimensions.margins.bottom);
+            .attr('height', dimensions.height + dimensions.margins.top + dimensions.margins.bottom);
 
         //clipPath
         const clipPath = svg
@@ -89,7 +90,7 @@
         const clipPathRect = clipPath
             .append('rect')
             .attr('width', dimensions.width)
-            .attr('height', dimensions.height/4);
+            .attr('height', dimensions.height);
             //.attr('transform', `translate(${dimensions.margins.left},${dimensions.margins.top})`);
 
         //chart
@@ -109,7 +110,8 @@
             clipPath,
             clipPathRect,
             canvas,
-            brush
+            brush,
+            dimensions
         };
     }
 
@@ -168,10 +170,10 @@
         const label = axis.append('text')
             .classed('label label--x', true)
             .attr('x', dimensions.width/2)
-            .attr('y', dimensions.margins.bottom - 16)
+            .attr('y', dimensions.margins.bottom)
             .style('text-anchor', 'middle')
-            .style('fill', 'black')
-            .text(labelText || 'Date');
+            .style('fill', 'black');
+            //.text(labelText || 'Date');
 
         return {
             scale,
@@ -205,18 +207,18 @@
             .call(gridLinesGenerator);
 
         //axis
-        const axis = canvas
-            .append('g')
-            .classed('axis axis--x', true)
-            .attr('transform', `translate(0,${dimensions.height/4})`)
-            .call(generator);
+        //const axis = canvas
+        //    .append('g')
+        //    .classed('axis axis--x', true)
+        //    .attr('transform', `translate(0,${dimensions.height/4})`)
+        //    .call(generator);
 
         return {
             scale,
             generator,
             gridLinesGenerator,
             gridLines,
-            axis,
+        //    axis,
         };
     }
 
@@ -276,8 +278,8 @@
             .attr('x', -(dimensions.height / 2))
             .attr('y', -dimensions.margins.left + 16)
             .style('text-anchor', 'middle')
-            .style('fill', 'black')
-            .text(labelText || 'Result');
+            .style('fill', 'black');
+            //.text(labelText || 'Result');
 
         return {
             scale,
@@ -301,15 +303,15 @@
             .scale(scale);
 
         //axis
-        const axis = canvas
-            .append('g')
-            .classed('axis axis--y', true)
-            .call(generator);
+        //const axis = canvas
+        //    .append('g')
+        //    .classed('axis axis--y', true)
+        //    .call(generator);
 
         return {
             scale,
             generator,
-            axis,
+        //    axis,
         };
     }
 
@@ -385,14 +387,14 @@
     }
 
     function zoom(ts) {
-        const transition = ts.containers.chart.transition().duration(750);
-        ts.x.axis.transition(transition).call(ts.x.generator);
-        ts.x.gridLines.transition(transition).call(ts.x.gridLinesGenerator);
-        ts.y.axis.transition(transition).call(ts.y.generator);
-        ts.y.gridLines.transition(transition).call(ts.y.gridLinesGenerator);
-        ts.line.path
+        const transition = ts.containers.chart.canvas.transition().duration(750);
+        ts.x.chart.axis.transition(transition).call(ts.x.chart.generator);
+        ts.x.chart.gridLines.transition(transition).call(ts.x.chart.gridLinesGenerator);
+        ts.y.chart.axis.transition(transition).call(ts.y.chart.generator);
+        ts.y.chart.gridLines.transition(transition).call(ts.y.chart.gridLinesGenerator);
+        ts.line.chart.path
             .transition(transition)
-            .attr('d', ts.line.generator);
+            .attr('d', ts.line.chart.generator);
     }
 
     function end(ts) {
@@ -401,28 +403,28 @@
 
         //Reset chart on double click.
         if (!s) {
-            if (!ts.brush.idleTimeout)
-                return ts.brush.idleTimeout = setTimeout(
+            if (!ts.brush.chart.idleTimeout)
+                return ts.brush.chart.idleTimeout = setTimeout(
                     () => {
-                        ts.brush.idleTimeout = null;
+                        ts.brush.chart.idleTimeout = null;
                     },
-                    ts.brush.idleDelay
+                    ts.brush.chart.idleDelay
                 );
-            ts.x.scale.domain(ts.x.domain);
-            ts.y.scale.domain(ts.y.domain).nice();
+            ts.x.chart.scale.domain(ts.x.domain);
+            ts.y.chart.scale.domain(ts.y.domain).nice();
         }
         //Update x- and y-domains with coordinates of brushed region.
         else {
-            ts.x.scale.domain([s[0][0], s[1][0]].map(ts.x.scale.invert, ts.x.scale)); // update x-domain
-            ts.y.scale.domain([s[1][1], s[0][1]].map(ts.y.scale.invert, ts.y.scale)); // update y-domain
-            ts.containers.brush.call(ts.brush.generator.move, null); // reset brush
+            ts.x.chart.scale.domain([s[0][0], s[1][0]].map(ts.x.chart.scale.invert, ts.x.chart.scale)); // update x-domain
+            ts.y.chart.scale.domain([s[1][1], s[0][1]].map(ts.y.chart.scale.invert, ts.y.chart.scale)); // update y-domain
+            ts.containers.chart.brush.call(ts.brush.chart.generator.move, null); // reset brush
         }
 
         //Update chart.
         zoom(ts);
     }
 
-    function addBrush(ts) {
+    function chart$5(ts) {
         const generator = d3.brush();
 
         generator
@@ -437,6 +439,52 @@
             idleTimeout: null,
             idleDelay: 350,
             container: ts.containers.chart.brush,
+        };
+    }
+
+    //import zoom from './zoom';
+
+    function end$1(ts) {
+        //The coordinates of the brush.
+        const s = d3.event.selection;
+
+        if (s === null) ; else {
+            ts.x.drawer.scale.domain([s[0][0], s[1][0]].map(ts.x.drawer.scale.invert, ts.x.drawer.scale)); // update x-domain
+            ts.x.chart.scale.domain([s[0][0], s[1][0]].map(ts.x.chart.scale.invert, ts.x.chart.scale)); // update x-domain
+            zoom(ts);
+        }
+        //ts.containers.chart.brush.call(ts.brush.chart.generator.move, null); // reset brush
+
+        //Update chart.
+    }
+
+    function drawer$3(ts) {
+        const generator = d3.brushX();
+
+        generator
+            .extent([[0,0],[ts.containers.drawer.dimensions.width,ts.containers.drawer.dimensions.height]])
+            .on('end', function() {
+                end$1(ts);
+            });
+
+        ts.containers.drawer.brush.call(generator);
+        //ts.containers.drawer.brush.call(generator.move, ts.x.domain.map(ts.x.drawer.scale));
+
+        return {
+            generator,
+            idleTimeout: null,
+            idleDelay: 350,
+            container: ts.containers.drawer.brush,
+        };
+    }
+
+    function addBrush(ts) {
+        const chart = chart$5(ts);
+        const drawer = drawer$3(ts);
+
+        return {
+            chart: chart$5(ts),
+            drawer
         };
     }
 
