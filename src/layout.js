@@ -1,26 +1,11 @@
-import getDimensions from './getDimensions';
-import layoutChart from './layout/chart';
-import layoutDrawer from './layout/drawer';
-
-export default function layout(ts) {
-    const main = d3.select(ts.element);
-    const dimensions = getDimensions(main);
-
-    //container
-    const div = main
+export default function layout() {
+    this.container = d3.select(this.element)
         .append('div')
         .classed('time-series', true);
-
-    //chart
-    const chart = layoutChart(div, dimensions);
-
-    //drawer
-    const drawer = layoutDrawer(div, dimensions);
-
-    return {
-        main,
-        div,
-        chart,
-        drawer
-    };
+    this.chart.container = this.container
+        .append('div')
+        .classed('ts-component ts-component--chart', true);
+    this.drawer.container = this.container
+        .append('div')
+        .classed('ts-component ts-component--drawer', true);
 }
