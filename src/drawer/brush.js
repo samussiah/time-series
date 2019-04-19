@@ -1,27 +1,33 @@
+import updateChart from './brush/updateChart';
+
 export default function brush() {
-    const context = this;
-
     this.drawer.brushGenerator = d3.brushX()
-        .extent([0,0],[this.dimensions.widthLessMargin,this.dimensions.drawerHeight])
-        .on('brush end', brushed);
-
+        .extent([[0,0],[this.dimensions.widthLessMargin,this.dimensions.drawerHeight]])
+        .on('brush', () => {
+            const extent = d3.event.selection;
+            this.drawer.brushHandles
+                .attr('display', null)
+                .attr('transform', (d,i) => 'translate(' + extent[i] + ',0)');
+        })
+        .on('end', () => {
+            updateChart.call(this);
+        });
     this.drawer.brush.call(this.drawer.brushGenerator);
+    this.drawer.brushHandles = this.drawer.brush
+        .selectAll('rect.handle--custom')
+            .data([{type: 'w'}, {type: 'e'}])
+            .enter()
+        .append('rect')
+        .classed('handle--custom', true)
+        .attr('fill', '#666')
+        .attr('fill-opacity', 0.8)
+        .attr('stroke', '#000')
+        .attr('stroke-width', 1.5)
+        .attr('cursor', 'ew-resize')
+        .attr('x', (d,i) => i ? 0 : -5)
+        .attr('y', 0)
+        .attr('width', '5px')
+        .attr('height', this.dimensions.drawerHeight);
+    this.drawer.brush.call(this.drawer.brushGenerator.move, [0,this.dimensions.widthLessMargin]);
 
-    function brushed() {
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-        var s = d3.event.selection || context.drawer.x.scale.range();
-        context.chart.x.scale.domain(s.map(context.drawer.x.scale.invert, context.drawer.x.scale));
-        context.chart.linePath.attr("d", area);
-        context.chart.x.axis.call(context.chart.x.generator);
-        //svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
-        //    .scale(width / (s[1] - s[0]))
-        //    .translate(-s[0], 0));
-    }
-    //generator
-    //    .extent([[0,0],[ts.containers.drawer.dimensions.width,ts.containers.drawer.dimensions.height]])
-    //    .on('end', function() {
-    //        end(ts);
-    //    });
-
-    //ts.containers.drawer.brush.call(generator);
 }

@@ -5,25 +5,23 @@ export default function y() {
         .domain(this.y.domain)
         .nice();
 
-    //generators
+    //axis
     this.chart.y.generator = d3.axisLeft()
         .scale(this.chart.y.scale);
-    this.chart.y.gridLinesGenerator = d3.axisLeft()
-        .scale(this.chart.y.scale)
-        .tickSize(-this.dimensions.widthLessMargin)
-        .tickFormat('');
-
-    //grid lines
-    this.chart.y.gridLines = this.chart.canvas
-        .append('g')
-        .classed('grid-lines grid-lines--y', true)
-        .call(this.chart.y.gridLinesGenerator);
-
-    //axis
     this.chart.y.axis = this.chart.canvas
         .append('g')
         .classed('axis axis--y', true)
         .call(this.chart.y.generator);
+
+    //grid lines
+    this.chart.y.gridLinesGenerator = d3.axisLeft()
+        .scale(this.chart.y.scale)
+        .tickSize(-this.dimensions.widthLessMargin)
+        .tickFormat('');
+    this.chart.y.gridLines = this.chart.canvas
+        .append('g')
+        .classed('grid-lines grid-lines--y', true)
+        .call(this.chart.y.gridLinesGenerator);
 
     //label
     this.chart.y.label = this.chart.y.axis.append('text')
