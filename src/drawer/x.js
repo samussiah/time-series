@@ -1,13 +1,14 @@
 export default function x() {
     //scale
-    this.drawer.x.scale = d3.scaleTime()
+    this.drawer.x.scale = d3
+        .scaleTime()
         .range([0, this.dimensions.widthLessMargin])
         .domain(this.x.domain);
 
     //generators
-    this.drawer.x.generator = d3.axisBottom()
-        .scale(this.drawer.x.scale);
-    this.drawer.x.gridLinesGenerator = d3.axisBottom()
+    this.drawer.x.generator = d3.axisBottom().scale(this.drawer.x.scale);
+    this.drawer.x.gridLinesGenerator = d3
+        .axisBottom()
         .scale(this.drawer.x.scale)
         .tickSize(-this.dimensions.drawerHeight)
         .tickFormat('');

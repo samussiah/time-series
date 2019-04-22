@@ -7,24 +7,28 @@ export default function layout() {
         .attr('height', this.dimensions.height);
 
     //clipPath
-    this.chart.clipPath = this.chart.svg
-        .append('clipPath')
-        .attr('id', 'ts-clip-path--chart');
+    this.chart.clipPath = this.chart.svg.append('clipPath').attr('id', 'ts-clip-path--chart');
     this.chart.clipPathRect = this.chart.clipPath
         .append('rect')
         .attr('width', this.dimensions.widthLessMargin)
-        .attr('height', this.dimensions.heightLessMargin)
-        //.attr('transform', `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`);
+        .attr('height', this.dimensions.heightLessMargin);
+    //.attr('transform', `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`);
 
     //canvas
     this.chart.canvas = this.chart.svg
         .append('g')
         .classed('ts-chart', true)
-        .attr('transform', `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`);
+        .attr(
+            'transform',
+            `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`
+        );
 
     //brush
     this.chart.brush = this.chart.svg
         .append('g')
         .classed('ts-brush', true)
-        .attr('transform', `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`);
+        .attr(
+            'transform',
+            `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`
+        );
 }

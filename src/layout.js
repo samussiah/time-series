@@ -1,5 +1,6 @@
 export default function layout() {
-    this.container = d3.select(this.element)
+    this.container = d3
+        .select(this.element)
         .append('div')
         .classed('time-series', true);
     this.chart.container = this.container
