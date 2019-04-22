@@ -24,6 +24,9 @@
 }
 
 /* axes */
+.container {
+    display: inline-block;
+}
 .grid-lines {
     stroke-width: .5px;
     stroke-opacity: .25;
